@@ -1,0 +1,51 @@
+Alex Vo
+SID: 860884149
+
+All the exercises appear to be working correctly.
+
+Vector_3D<double> Phong_Shader::Shade_Surface( ...) const
+	calculates phong shading for multiple sources of light.
+	uses a for loop, within each loop it will calculate the diffuse and specular color according to the equation
+		Kd * I * max( n dot l ) + Ks * I * max( n dot halfway_vector)^p
+
+	if shadows are enabled, cast a ray from the intersection point of ray to the light.  if there is a hit, continue
+	and dont change color
+	
+Vector_3D<double> Reflective_Shader::Shade_Surface( ...) const
+	Casts a reflective ray from the intersection point to the reflection direction: d - 2( d dot n)n
+	if htere is a hit, recursively cast another ray.
+	
+Vector_3D<double> Flat_Shader::Shade_Surface(...) const
+	shades everything with a flat color.  simply returns a color.
+	
+bool Sphere::Intersection(Ray& ray) const
+	finds the ray sphere intersection with the algorithm in lab 7.
+		
+	after finding t from that algorithm, check to see if ray is semi infinite.  
+	if semi_infinite, set variables accordingly ( set semi_infinite to false, set t_max, etc.)
+	if semi_infinite is false, then just set t_max if new t is less than t_max
+	
+Vector_3D<double> Sphere::Normal(const Vector_3D<double>& location) const
+	returns the normal at a location on the sphere
+
+bool Plane::Intersection(Ray& ray) const
+	caculates the ray plane intersection with the algorithm from the notes:
+		t = ( N dot (q - a) ) / ( N dot (b -a) )
+	if denominator is zero, return false because you cant divide by zero
+	if t > small_t and semi_infinite is true, set variables accordingly ( set semi_infinite to false, set t_max, etc.)
+	if t > small_t and semi_infinite is false, set t_max if new t is less than t_max
+	
+Vector_3D<double> Camera::World_Position(const Vector_2D<int>& pixel_index)
+	gets the pixel(a,b) in world position by using a*horizontal + b*vertical + the grid center
+	
+const Object* Render_World::Closest_Intersection(Ray& ray)
+	uses a for loop and finds all the objects that the ray intersects with
+	returns the closest object
+
+void Render_World::Render_Pixel(const Vector_2D<int>& pixel_index)
+	sets the viewing ray
+	
+Vector_3D<double> Render_World::Cast_Ray(Ray& ray,const Ray& parent_ray)
+	gets the closest object of the ray if there is a hit
+	if there is a hit with an object, call object -> material shader -> shade surface and return it.
+	otherwise, return background color
